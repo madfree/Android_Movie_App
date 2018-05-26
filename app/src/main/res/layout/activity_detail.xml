@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<ScrollView
+    android:layout_height="match_parent"
+    android:layout_width="match_parent"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <RelativeLayout
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/iv_detail_movie_poster"
+            android:layout_alignParentTop="true"
+            android:padding="10dp"
+            android:contentDescription="@string/movie_poster"
+            />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/tv_title"
+            android:layout_toEndOf="@id/iv_detail_movie_poster"
+            android:padding="10dp"
+            android:textSize="20sp"
+            />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/tv_release_date"
+            android:layout_below="@id/tv_title"
+            android:layout_toEndOf="@id/iv_detail_movie_poster"
+            android:padding="10dp"
+            android:textSize="16sp"
+            />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/tv_rating"
+            android:layout_below="@id/tv_release_date"
+            android:layout_toEndOf="@id/iv_detail_movie_poster"
+            android:padding="10dp"
+            android:textSize="16sp"
+            />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/tv_description"
+            android:layout_below="@id/iv_detail_movie_poster"
+            android:padding="10dp"
+            android:textSize="14sp"
+            />
+
+        <TextView
+            android:id="@+id/tv_error_message_display"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="16dp"
+            android:text="@string/error_message"
+            android:textSize="20sp"
+            android:visibility="invisible" />
+
+    </RelativeLayout>
+
+</ScrollView>
