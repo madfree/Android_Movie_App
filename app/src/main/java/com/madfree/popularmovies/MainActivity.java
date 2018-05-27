@@ -54,25 +54,30 @@ public class MainActivity extends AppCompatActivity {
 
         sharedPref = getSharedPreferences(PREF_MOVIE_LIST, MODE_PRIVATE);
 
+        // When the UI is build, get and display the data from our preferred list
         loadMovieData(sharedPref.getString(PREF_MOVIE_LIST, KEY_POPULAR));
 
     }
 
+    // method the load the movie data from the database
     private void loadMovieData(String selection) {
         showMovieDataView();
         new FetchMovieData().execute(selection);
     }
 
+    // shows the movie data
     private void showMovieDataView() {
         mErrorMessageDisplay.setVisibility(View.INVISIBLE);
         mRecyclerView.setVisibility(View.VISIBLE);
     }
 
+    // shows an error message (in case there is no data to display, see below)
     private void showErrorMessage() {
         mRecyclerView.setVisibility(View.INVISIBLE);
         mErrorMessageDisplay.setVisibility(View.VISIBLE);
     }
 
+    // the AsyncTask class to fetch the data via API and display it, after it was parsed
     class FetchMovieData extends AsyncTask<String, Void, ArrayList<HashMap<String, String>>> {
 
         private final String TAG = FetchMovieData.class.getName();
@@ -112,6 +117,7 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    // the options menu to select which movie list to load and save in sharedPreferences
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();

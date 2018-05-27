@@ -23,6 +23,7 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieListAda
     public MovieAdapter() {
     }
 
+    // the constructor for our adapter
     public class MovieListAdapterViewHolder extends RecyclerView.ViewHolder {
 
         final ImageView mMoviePoster;
@@ -33,6 +34,7 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieListAda
         }
     }
 
+    // creates and inflates the adapter when called
     @NonNull
     @Override
     public MovieListAdapterViewHolder onCreateViewHolder (@NonNull ViewGroup viewGroup, int viewType) {
@@ -44,6 +46,7 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieListAda
         return new MovieListAdapterViewHolder(view);
     }
 
+    // binds the data for the movies to the grid via the adapter
     @Override
     public void onBindViewHolder(@NonNull final MovieListAdapterViewHolder holder, final int position) {
 
@@ -70,12 +73,14 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieListAda
         });
     }
 
+    // counts the number of items of the movie data list
     @Override
     public int getItemCount () {
         if (null == mMovieData) return 0;
         return mMovieData.size();
     }
 
+    // fetches the movie data for the adapter
     public void setMovieData(ArrayList<HashMap<String, String>> movieData) {
         mMovieData = movieData;
         notifyDataSetChanged();

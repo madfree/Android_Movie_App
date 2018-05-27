@@ -16,6 +16,7 @@ public class DetailActivity extends AppCompatActivity {
 
     private final String TAG = DetailActivity.class.getName();
 
+    // creates the movie details screen with data from the intent and loads the movie poster
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
