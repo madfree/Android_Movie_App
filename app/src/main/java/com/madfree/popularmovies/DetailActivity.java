@@ -12,8 +12,6 @@ import com.squareup.picasso.Picasso;
 
 public class DetailActivity extends AppCompatActivity {
 
-    // TODO: Make the DetailScreen scrollable from rotation
-
     private final String TAG = DetailActivity.class.getName();
 
     // creates the movie details screen with data from the intent and loads the movie poster
