@@ -1,6 +1,6 @@
 <resources>
     <string name="app_name">Popular Movies</string>
-    <string name="error_message">An error has occurred. Please try again by clicking REFRESH</string>
+    <string name="error_message">An error has occurred. Please try again!</string>
     <string name="popular">Most Popular Movies</string>
     <string name="best_rated">Best Rated Movies</string>
     <string name="movie_poster">This is the movie poster</string>

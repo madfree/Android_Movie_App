@@ -1,7 +1,11 @@
 package com.madfree.popularmovies;
 
 import android.content.SharedPreferences;
-import android.os.AsyncTask;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
+import android.support.v4.app.LoaderManager;
+import android.support.v4.content.AsyncTaskLoader;
+import android.support.v4.content.Loader;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
@@ -20,7 +24,8 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity
+    implements LoaderManager.LoaderCallbacks<ArrayList<HashMap<String, String>>> {
 
     private final String TAG = MainActivity.class.getName();
 
@@ -34,6 +39,8 @@ public class MainActivity extends AppCompatActivity {
     private static final String KEY_RATING = "top_rated";
 
     private SharedPreferences sharedPref;
+
+    private static final int MOVIE_LOADER_ID = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,16 +61,11 @@ public class MainActivity extends AppCompatActivity {
 
         sharedPref = getSharedPreferences(PREF_MOVIE_LIST, MODE_PRIVATE);
 
-        // When the UI is build, get and display the data from our preferred list
-        loadMovieData(sharedPref.getString(PREF_MOVIE_LIST, KEY_POPULAR));
+        LoaderManager.LoaderCallbacks<ArrayList<HashMap<String, String>>> callback = MainActivity.this;
 
+        getSupportLoaderManager().initLoader(MOVIE_LOADER_ID, null, callback);
     }
 
-    // method the load the movie data from the database
-    private void loadMovieData(String selection) {
-        showMovieDataView();
-        new FetchMovieData().execute(selection);
-    }
 
     // shows the movie data
     private void showMovieDataView() {
@@ -77,44 +79,67 @@ public class MainActivity extends AppCompatActivity {
         mErrorMessageDisplay.setVisibility(View.VISIBLE);
     }
 
-    // the AsyncTask class to fetch the data via API and display it, after it was parsed
-    class FetchMovieData extends AsyncTask<String, Void, ArrayList<HashMap<String, String>>> {
+    @NonNull
+    @Override
+    public Loader<ArrayList<HashMap<String, String>>> onCreateLoader(int id, @Nullable Bundle args) {
 
-        private final String TAG = FetchMovieData.class.getName();
+        return new AsyncTaskLoader<ArrayList<HashMap<String, String>>>(this) {
 
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-            mLoadingIndicator.setVisibility(View.VISIBLE);
-        }
+            ArrayList<HashMap<String, String>> movieDbData = null;
 
-        @Override
-        protected ArrayList<HashMap<String,String>> doInBackground(String... params) {
-
-            String movieDbData = params[0];
-            URL movieDbUrl = NetworkUtils.buildUrl(movieDbData);
-            ArrayList<HashMap<String, String>> parsedMovieData = null;
-
-            try {
-                String jsonResponse = NetworkUtils.getResponseFromHttpUrl(movieDbUrl);
-                //Log.e(TAG, "Response from url" + jsonResponse);
-                parsedMovieData = NetworkUtils.parseJsonData(jsonResponse);
-            } catch (IOException e) {
-                e.printStackTrace();
+            @Override
+            protected void onStartLoading() {
+                if (movieDbData != null) {
+                    deliverResult(movieDbData);
+                } else {
+                    mLoadingIndicator.setVisibility(View.VISIBLE);
+                    forceLoad();
+                }
             }
-            return parsedMovieData;
-        }
 
-        @Override
-        protected void onPostExecute(ArrayList<HashMap<String, String>> movieData) {
-            mLoadingIndicator.setVisibility(View.INVISIBLE);
-            if (movieData != null) {
-                showMovieDataView();
-                mMovieAdapter.setMovieData(movieData);
-            } else {
-                showErrorMessage();
+            @Nullable
+            @Override
+            public ArrayList<HashMap<String, String>> loadInBackground() {
+                String prefMovieList = sharedPref.getString(PREF_MOVIE_LIST, KEY_POPULAR);
+                URL movieDbUrl = NetworkUtils.buildUrl(prefMovieList);
+
+                try {
+                    String jsonResponse = NetworkUtils.getResponseFromHttpUrl(movieDbUrl);
+                    //Log.e(TAG, "Response from url" + jsonResponse);
+                    ArrayList<HashMap<String, String>> parsedMovieData = NetworkUtils.parseJsonData(jsonResponse);
+                    return parsedMovieData;
+                } catch (IOException e) {
+                    e.printStackTrace();
+                    return null;
+                }
             }
+
+            public void deliverResult(ArrayList<HashMap<String, String>> data) {
+                movieDbData = data;
+                super.deliverResult(data);
+            }
+        };
+    }
+
+    @Override
+    public void onLoadFinished(@NonNull Loader<ArrayList<HashMap<String, String>>> loader,
+                               ArrayList<HashMap<String, String>> data) {
+        mLoadingIndicator.setVisibility(View.INVISIBLE);
+        if (null == data) {
+            showErrorMessage();
+        } else {
+            showMovieDataView();
+            mMovieAdapter.setMovieData(data);
         }
+    }
+
+    @Override
+    public void onLoaderReset(@NonNull Loader<ArrayList<HashMap<String, String>>> loader) {
+
+    }
+
+    private void invalidateData() {
+        mMovieAdapter.setMovieData(null);
     }
 
     // the options menu to select which movie list to load and save in sharedPreferences
@@ -131,14 +156,16 @@ public class MainActivity extends AppCompatActivity {
         int id = item.getItemId();
 
         if (id == R.id.most_popular_movies) {
+            invalidateData();
             editor.putString(PREF_MOVIE_LIST, KEY_POPULAR);
             editor.apply();
-            loadMovieData(sharedPref.getString(PREF_MOVIE_LIST, null));
+            getSupportLoaderManager().restartLoader(id, null, this);
         }
         if (id == R.id.best_rated_movies) {
+            invalidateData();
             editor.putString(PREF_MOVIE_LIST, KEY_RATING);
             editor.apply();
-            loadMovieData(sharedPref.getString(PREF_MOVIE_LIST, null));
+            getSupportLoaderManager().restartLoader(id, null, this);
         }
         return super.onOptionsItemSelected(item);
     }
