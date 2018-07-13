@@ -19,8 +19,13 @@
             </intent-filter>
         </activity>
         <activity android:name=".DetailActivity"
-            android:parentActivityName=".MainActivity"
-            />
+            android:parentActivityName=".MainActivity" />
+
+        <provider
+            android:name="com.madfree.popularmovies.data.MovieProvider"
+            android:authorities="com.madfree.popularmovies"
+            android:exported="false" />
+
     </application>
 
 </manifest>

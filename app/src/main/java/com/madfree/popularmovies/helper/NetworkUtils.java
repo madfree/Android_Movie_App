@@ -1,4 +1,4 @@
-package com.madfree.popularmovies.Helper;
+package com.madfree.popularmovies.helper;
 
 import android.net.Uri;
 import android.util.Log;
@@ -21,7 +21,7 @@ public class NetworkUtils {
     private static final String TAG = NetworkUtils.class.getName();
 
     // TODO: Add your API key from themoviedb.org here!
-    private final static String apiKey = "YourApiKey";
+    private final static String apiKey = "YOUR_API_KEY";
 
     private final static String MOVIEDB_BASE_URL = "https://api.themoviedb.org/3/";
     private final static String CATEGORY = "movie";
@@ -47,11 +47,11 @@ public class NetworkUtils {
     }
 
     // build the URL string for the thumb of the movie poster in the grid
-    public static String buildThumbString(String thumbUrlString) {
+    public static String buildThumbString(String movieId) {
         StringBuilder builtString = new StringBuilder();
         builtString.append(IMAGE_BASE_URL)
                 .append(IMAGE_SIZE)
-                .append(thumbUrlString);
+                .append(movieId);
 
         //Log.d(TAG, "buildUrl: " + builtString);
         return builtString.toString();
@@ -92,18 +92,20 @@ public class NetworkUtils {
                 for (int i = 0; i < movieList.length(); i++) {
 
                     JSONObject movieEntry = movieList.getJSONObject(i);
+                    String movieId = movieEntry.getString("id");
                     String originalTitle = movieEntry.getString("original_title");
-                    String moviePosterUrl = movieEntry.getString("poster_path");
-                    String description = movieEntry.getString("overview");
-                    String userRating = movieEntry.getString("vote_average");
                     String releaseDate = movieEntry.getString("release_date");
+                    String userRating = movieEntry.getString("vote_average");
+                    String description = movieEntry.getString("overview");
+                    String moviePosterUrl = movieEntry.getString("poster_path");
 
                     HashMap<String, String> movieDetail = new HashMap<>();
+                    movieDetail.put("id", movieId);
                     movieDetail.put("originalTitle", originalTitle);
-                    movieDetail.put("moviePosterUrl", moviePosterUrl);
-                    movieDetail.put("description", description);
-                    movieDetail.put("userRating", userRating);
                     movieDetail.put("releaseDate", releaseDate);
+                    movieDetail.put("userRating", userRating);
+                    movieDetail.put("description", description);
+                    movieDetail.put("moviePosterUrl", moviePosterUrl);
                     parsedMovieData.add(movieDetail);
                     //Log.v(TAG, "This is the movieDetail: " + movieDetail);
                 }

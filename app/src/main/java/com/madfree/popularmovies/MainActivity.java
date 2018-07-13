@@ -1,6 +1,7 @@
 package com.madfree.popularmovies;
 
 import android.content.SharedPreferences;
+import android.database.Cursor;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.LoaderManager;
@@ -10,6 +11,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -17,7 +19,8 @@ import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
-import com.madfree.popularmovies.Helper.NetworkUtils;
+import com.madfree.popularmovies.data.MovieContract;
+import com.madfree.popularmovies.helper.NetworkUtils;
 
 import java.io.IOException;
 import java.net.URL;
@@ -25,7 +28,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 public class MainActivity extends AppCompatActivity
-    implements LoaderManager.LoaderCallbacks<ArrayList<HashMap<String, String>>> {
+        implements LoaderManager.LoaderCallbacks<ArrayList<HashMap<String, String>>> {
 
     private final String TAG = MainActivity.class.getName();
 
@@ -37,6 +40,7 @@ public class MainActivity extends AppCompatActivity
     private static final String PREF_MOVIE_LIST = "MyMovieList";
     private static final String KEY_POPULAR = "popular";
     private static final String KEY_RATING = "top_rated";
+    public static final String KEY_FAVORITE = "favorite";
 
     private SharedPreferences sharedPref;
 
@@ -48,7 +52,6 @@ public class MainActivity extends AppCompatActivity
         setContentView(R.layout.activity_main);
 
         mRecyclerView = findViewById(R.id.rv_movies);
-
         mErrorMessageDisplay = findViewById(R.id.tv_error_message_display);
 
         GridLayoutManager gridLayoutManager = new GridLayoutManager(this, 2);
@@ -62,7 +65,6 @@ public class MainActivity extends AppCompatActivity
         sharedPref = getSharedPreferences(PREF_MOVIE_LIST, MODE_PRIVATE);
 
         LoaderManager.LoaderCallbacks<ArrayList<HashMap<String, String>>> callback = MainActivity.this;
-
         getSupportLoaderManager().initLoader(MOVIE_LOADER_ID, null, callback);
     }
 
@@ -81,7 +83,7 @@ public class MainActivity extends AppCompatActivity
 
     @NonNull
     @Override
-    public Loader<ArrayList<HashMap<String, String>>> onCreateLoader(int id, @Nullable Bundle args) {
+    public Loader<ArrayList<HashMap<String, String>>> onCreateLoader(int loaderId, @Nullable Bundle args) {
 
         return new AsyncTaskLoader<ArrayList<HashMap<String, String>>>(this) {
 
@@ -100,17 +102,50 @@ public class MainActivity extends AppCompatActivity
             @Nullable
             @Override
             public ArrayList<HashMap<String, String>> loadInBackground() {
-                String prefMovieList = sharedPref.getString(PREF_MOVIE_LIST, KEY_POPULAR);
-                URL movieDbUrl = NetworkUtils.buildUrl(prefMovieList);
 
-                try {
-                    String jsonResponse = NetworkUtils.getResponseFromHttpUrl(movieDbUrl);
-                    //Log.e(TAG, "Response from url" + jsonResponse);
-                    ArrayList<HashMap<String, String>> parsedMovieData = NetworkUtils.parseJsonData(jsonResponse);
+                String prefMovieList = sharedPref.getString(PREF_MOVIE_LIST, KEY_POPULAR);
+                Log.v(TAG, "Result from sharedPreferences: " + prefMovieList);
+
+                if (prefMovieList.equals(KEY_FAVORITE)) {
+                    Log.v(TAG, "Loading favorites");
+                    Cursor cursor = getContentResolver().query(MovieContract.MovieEntry.CONTENT_URI,
+                            null,
+                            null,
+                            null,
+                            null);
+
+                    ArrayList<HashMap<String, String>> parsedMovieData = new ArrayList<>();
+                    if ((cursor != null) && (cursor.getCount() > 0))
+                        for (cursor.moveToFirst(); !cursor.isAfterLast(); cursor.moveToNext()) {
+                            String movieId = cursor.getString(cursor.getColumnIndex(MovieContract.MovieEntry.COLUMN_MOVIE_ID));
+                            String originalTitle = cursor.getString(cursor.getColumnIndex(MovieContract.MovieEntry.COLUMN_MOVIE_NAME));
+                            String releaseDate = cursor.getString(cursor.getColumnIndex(MovieContract.MovieEntry.COLUMN_RELEASE_DATE));
+                            String userRating = cursor.getString(cursor.getColumnIndex(MovieContract.MovieEntry.COLUMN_RATING));
+                            String description = cursor.getString(cursor.getColumnIndex(MovieContract.MovieEntry.COLUMN_DESCRIPTION));
+                            String moviePosterUrl = cursor.getString(cursor.getColumnIndex(MovieContract.MovieEntry.COLUMN_MOVIE_POSTER_URL));
+
+                            HashMap<String, String> movieDetail = new HashMap<>();
+                            movieDetail.put("id", movieId);
+                            movieDetail.put("originalTitle", originalTitle);
+                            movieDetail.put("releaseDate", releaseDate);
+                            movieDetail.put("userRating", userRating);
+                            movieDetail.put("description", description);
+                            movieDetail.put("moviePosterUrl", moviePosterUrl);
+                            parsedMovieData.add(movieDetail);
+                            cursor.close();
+                        }
                     return parsedMovieData;
-                } catch (IOException e) {
-                    e.printStackTrace();
-                    return null;
+                } else {
+                    try {
+                        URL movieDbUrl = NetworkUtils.buildUrl(prefMovieList);
+                        String jsonResponse = NetworkUtils.getResponseFromHttpUrl(movieDbUrl);
+                        //Log.e(TAG, "Response from url" + jsonResponse);
+                        ArrayList<HashMap<String, String>> parsedMovieData = NetworkUtils.parseJsonData(jsonResponse);
+                        return parsedMovieData;
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                        return null;
+                    }
                 }
             }
 
@@ -164,6 +199,12 @@ public class MainActivity extends AppCompatActivity
         if (id == R.id.best_rated_movies) {
             invalidateData();
             editor.putString(PREF_MOVIE_LIST, KEY_RATING);
+            editor.apply();
+            getSupportLoaderManager().restartLoader(id, null, this);
+        }
+        if (id == R.id.favorite_movies) {
+            invalidateData();
+            editor.putString(PREF_MOVIE_LIST, KEY_FAVORITE);
             editor.apply();
             getSupportLoaderManager().restartLoader(id, null, this);
         }

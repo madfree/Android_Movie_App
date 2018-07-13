@@ -1,9 +1,15 @@
 <resources>
     <string name="app_name">Popular Movies</string>
+    <string name="content_authority">com.madfree.popularmovies</string>
+
     <string name="error_message">An error has occurred. Please try again!</string>
     <string name="popular">Most Popular Movies</string>
     <string name="best_rated">Best Rated Movies</string>
+    <string name="favorite_movies">Favorite Movies</string>
     <string name="movie_poster">This is the movie poster</string>
     <string name="release_date">Release Date:</string>
     <string name="user_rating">User rating:</string>
+    <string name="favorite">Mark as favorite</string>
+    <string name="markFavorite">Marked as favorite</string>
+    <string name="unmarkFavorite">Mark as favorite</string>
 </resources>
