@@ -20,4 +20,5 @@ Description
 - Read through reviews of movies
 - Share interesting movies with friends
 
-To use the app, you need to add your personal API key from themoviedb.org and insert it into Helper > NetworkUtils.java
+To use the app, you need to add your personal API key from themoviedb.org and insert it into Gradle > gradle.properties with the following line:
+THE_MOVIE_DB_API_KEY="YOUR_API_KEY"
