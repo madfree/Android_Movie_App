@@ -3,6 +3,8 @@ package com.madfree.popularmovies.utils;
 import android.net.Uri;
 import android.util.Log;
 
+import com.madfree.popularmovies.BuildConfig;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -21,7 +23,7 @@ public class NetworkUtils {
     private static final String TAG = NetworkUtils.class.getName();
 
     // TODO: Add your API key from themoviedb.org here!
-    private final static String apiKey = "YOUR_API_KEY";
+    private final static String apiKey = BuildConfig.API_KEY;
 
     private final static String MOVIEDB_BASE_URL = "https://api.themoviedb.org/3/";
     private final static String CATEGORY = "movie";

@@ -8,6 +8,11 @@ android {
         targetSdkVersion 27
         versionCode 1
         versionName "1.0"
+
+        // Add your TheMovieDB API Key into gradle.properties like this
+        // THE_MOVIE_DB_API_KEY="YOUR_API_KEY"
+        buildConfigField 'String', 'API_KEY', THE_MOVIE_DB_API_KEY
+
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
     buildTypes {
