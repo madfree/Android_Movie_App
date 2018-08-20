@@ -44,7 +44,8 @@ import java.util.ArrayList;
 
 import static com.madfree.popularmovies.data.MovieContract.MovieEntry.*;
 
-public class DetailActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<Cursor> {
+public class DetailActivity extends AppCompatActivity implements LoaderManager
+        .LoaderCallbacks<Cursor> {
 
     private final String TAG = DetailActivity.class.getName();
 
@@ -91,7 +92,6 @@ public class DetailActivity extends AppCompatActivity implements LoaderManager.L
 
         // The intent from MainActivity gets read
         Intent intent = getIntent();
-        //Log.v(TAG, "This is the intent received:" + intent);
 
         if (savedInstanceState != null) {
             movieId = savedInstanceState.getString("movieId");
@@ -104,16 +104,13 @@ public class DetailActivity extends AppCompatActivity implements LoaderManager.L
         } else {
             if (intent != null) {
                 movieId = intent.getStringExtra("movieId");
-                Log.d(TAG, "This is the intent: " + movieId);
                 // if  movieId is found in favorites, use the CursorLoader to load data from DB
                 favorite = isFavourite(movieId);
                 if (favorite) {
-                    Log.v(TAG, "Using loader to get data");
                     getSupportLoaderManager().initLoader(ID_MOVIE_LOADER, null, this);
                     mSaveButton.setChecked(true);
                 } else {
                     // if movieId is not found in favorites, take the data from the intent
-                    Log.v(TAG, "Using the data from the intent");
                     movieTitle = intent.getStringExtra("originalTitle");
                     releaseDate = intent.getStringExtra("releaseDate");
                     userRating = intent.getStringExtra("userRating");
@@ -146,7 +143,6 @@ public class DetailActivity extends AppCompatActivity implements LoaderManager.L
         String userRatingString = getString(R.string.user_rating) + " " + userRating;
         mRating.setText(userRatingString);
         mDescription.setText(description);
-        Log.d(TAG, "This is the movieId: " + movieId);
 
         Picasso.get()
                 .load(NetworkUtils.buildThumbString(posterUrl))
@@ -159,7 +155,6 @@ public class DetailActivity extends AppCompatActivity implements LoaderManager.L
     public Loader<Cursor> onCreateLoader(int loaderId, Bundle bundle) {
         switch (loaderId) {
             case ID_MOVIE_LOADER:
-                Log.d(TAG, "Using CursorLoader with id: " + loaderId);
                 return new CursorLoader(this,
                         CONTENT_URI,
                         null,
@@ -191,7 +186,8 @@ public class DetailActivity extends AppCompatActivity implements LoaderManager.L
         switch (view.getId()) {
             case R.id.save_button:
                 if (!favorite) {
-                    saveFavourite(movieId, movieTitle, releaseDate, userRating, description, posterUrl);
+                    saveFavourite(movieId, movieTitle, releaseDate, userRating, description,
+                            posterUrl);
                     mSaveButton.setChecked(true);
                 } else {
                     removeFavourite(movieId);
@@ -200,12 +196,12 @@ public class DetailActivity extends AppCompatActivity implements LoaderManager.L
         }
     }
 
-    private boolean isFavourite(String movieId){
+    private boolean isFavourite(String movieId) {
         Cursor cursor = getContentResolver()
                 .query(CONTENT_URI,
                         new String[]{MovieContract.MovieEntry.COLUMN_MOVIE_ID},
                         MovieContract.MovieEntry.COLUMN_MOVIE_ID + "=?",
-                        new String[]{movieId},null);
+                        new String[]{movieId}, null);
         if (cursor != null) {
             boolean isFavourite = cursor.getCount() > 0;
             cursor.close();
@@ -215,7 +211,7 @@ public class DetailActivity extends AppCompatActivity implements LoaderManager.L
     }
 
     private boolean saveFavourite(String movieId, String title, String releaseDate, String
-            userRating, String description, String posterUrl){
+            userRating, String description, String posterUrl) {
         ContentValues contentValues = new ContentValues();
         contentValues.put(MovieContract.MovieEntry.COLUMN_MOVIE_ID, movieId);
         contentValues.put(MovieContract.MovieEntry.COLUMN_MOVIE_NAME, title);
@@ -224,8 +220,9 @@ public class DetailActivity extends AppCompatActivity implements LoaderManager.L
         contentValues.put(MovieContract.MovieEntry.COLUMN_DESCRIPTION, description);
         contentValues.put(MovieContract.MovieEntry.COLUMN_MOVIE_POSTER_URL, posterUrl);
 
-        if (getContentResolver().insert(CONTENT_URI,contentValues) != null) {
-            Toast.makeText(getApplicationContext(), "Add movie as favourite!", Toast.LENGTH_SHORT).show();
+        if (getContentResolver().insert(CONTENT_URI, contentValues) != null) {
+            Toast.makeText(getApplicationContext(), "Add movie as favourite!", Toast
+                    .LENGTH_SHORT).show();
             favorite = isFavourite(movieId);
             mSaveButton.setChecked(favorite);
             return true;
@@ -235,11 +232,12 @@ public class DetailActivity extends AppCompatActivity implements LoaderManager.L
         }
     }
 
-    private boolean removeFavourite(String movieId){
+    private boolean removeFavourite(String movieId) {
         Uri uri = CONTENT_URI.buildUpon().appendPath(movieId).build();
         int deletedRows = getContentResolver().delete(uri, null, null);
         if (deletedRows > 0) {
-            Toast.makeText(getApplicationContext(),"Remove movie from favourites!", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getApplicationContext(), "Remove movie from favourites!", Toast
+                    .LENGTH_SHORT).show();
             favorite = isFavourite(movieId);
             mSaveButton.setChecked(favorite);
             return true;
@@ -266,14 +264,16 @@ public class DetailActivity extends AppCompatActivity implements LoaderManager.L
         if (listAdapter != null) {
             int numberOflistItems = listAdapter.getCount();
             int totalItemsHeight = 0;
-            int totalWidth = View.MeasureSpec.makeMeasureSpec(listView.getWidth(), View.MeasureSpec.AT_MOST);
+            int totalWidth = View.MeasureSpec.makeMeasureSpec(listView.getWidth(), View
+                    .MeasureSpec.AT_MOST);
             for (int itemNum = 0; itemNum < numberOflistItems; itemNum++) {
                 View listItem = listAdapter.getView(itemNum, null, listView);
                 listItem.measure(totalWidth, View.MeasureSpec.UNSPECIFIED);
                 totalItemsHeight += listItem.getMeasuredHeight();
             }
             ViewGroup.LayoutParams params = listView.getLayoutParams();
-            params.height = totalItemsHeight + (listView.getDividerHeight() * listAdapter.getCount() - 1);
+            params.height = totalItemsHeight + (listView.getDividerHeight() * listAdapter
+                    .getCount() - 1);
             listView.requestLayout();
         }
     }
@@ -289,7 +289,6 @@ public class DetailActivity extends AppCompatActivity implements LoaderManager.L
                     JSONObject movieDataObject = new JSONObject(jsonResponse);
                     // Getting JSON Array node
                     JSONArray trailerArray = movieDataObject.getJSONArray("results");
-                    Log.d(TAG, "This is the Trailer JsonArray: " + trailerArray);
                     newTrailers = Trailer.fromJson(trailerArray);
                 } catch (JSONException e) {
                     e.printStackTrace();
@@ -308,7 +307,8 @@ public class DetailActivity extends AppCompatActivity implements LoaderManager.L
                 mTrailerListViewTitle.setVisibility(View.INVISIBLE);
                 mTrailerListView.setVisibility(View.INVISIBLE);
             } else {
-                TrailerAdapter trailerAdapter = new TrailerAdapter(DetailActivity.this, trailerList);
+                TrailerAdapter trailerAdapter = new TrailerAdapter(DetailActivity.this,
+                        trailerList);
                 mTrailerListView.setAdapter(trailerAdapter);
                 setListViewHeight(mTrailerListView);
 
@@ -318,8 +318,7 @@ public class DetailActivity extends AppCompatActivity implements LoaderManager.L
                         "Hey, we should watch this movie: "
                                 + movieTitle + " "
                                 + NetworkUtils.youtubeUrlString(trailerList.get(0).link));
-                Log.d(TAG, "This is the shareMovieIntent:" + shareMovieIntent);
-                if (mShareActionProvider != null ) {
+                if (mShareActionProvider != null) {
                     mShareActionProvider.setShareIntent(shareMovieIntent);
                 } else {
                     Log.d(TAG, "Kein ShareActionProvider vorhanden!");
@@ -327,10 +326,12 @@ public class DetailActivity extends AppCompatActivity implements LoaderManager.L
 
                 mTrailerListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                     @Override
-                    public void onItemClick(AdapterView<?> adapter, View v, int position, long arg3) {
+                    public void onItemClick(AdapterView<?> adapter, View v, int position, long
+                            arg3) {
                         String trailerKey = trailerList.get(position).link;
                         String youtubeUrlLink = NetworkUtils.youtubeUrlString(trailerKey);
-                        Intent startIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(youtubeUrlLink));
+                        Intent startIntent = new Intent(Intent.ACTION_VIEW, Uri.parse
+                                (youtubeUrlLink));
                         startActivity(startIntent);
                     }
                 });

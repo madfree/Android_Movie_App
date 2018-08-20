@@ -28,7 +28,8 @@ public class MovieProvider extends ContentProvider {
 
         matcher.addURI(MovieContract.CONTENT_AUTHORITY, MovieContract.PATH_MOVIE, CODE_FAV_MOVIES);
 
-        matcher.addURI(MovieContract.CONTENT_AUTHORITY, MovieContract.PATH_MOVIE + "/#", CODE_FAV_MOVIE_WITH_ID);
+        matcher.addURI(MovieContract.CONTENT_AUTHORITY, MovieContract.PATH_MOVIE + "/#",
+                CODE_FAV_MOVIE_WITH_ID);
 
         return matcher;
     }
@@ -108,7 +109,8 @@ public class MovieProvider extends ContentProvider {
                 long id = db.insert(MovieContract.MovieEntry.TABLE_NAME, null, contentValues);
 
                 if (id > 0) {
-                    returnUri = ContentUris.withAppendedId(MovieContract.MovieEntry.CONTENT_URI, id);
+                    returnUri = ContentUris.withAppendedId(MovieContract.MovieEntry.CONTENT_URI,
+                            id);
                 } else {
                     throw new SQLException("Failed to insert row into " + uri);
                 }

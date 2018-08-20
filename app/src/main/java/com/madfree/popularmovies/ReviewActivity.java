@@ -6,7 +6,6 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.View;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -24,8 +23,6 @@ import java.net.URL;
 import java.util.ArrayList;
 
 public class ReviewActivity extends AppCompatActivity {
-
-    private final String TAG = ReviewActivity.class.getName();
 
     private ListView mReviews;
     private TextView mErrorMessageDisplay;
@@ -47,7 +44,6 @@ public class ReviewActivity extends AppCompatActivity {
         Intent intent = getIntent();
         if (intent != null) {
             String movieId = intent.getStringExtra("movieId");
-            Log.d(TAG, "This is the intent for reviews: " + movieId);
             new FetchReviews().execute(movieId);
         } else {
             mErrorMessageDisplay.setText(View.VISIBLE);
@@ -66,7 +62,6 @@ public class ReviewActivity extends AppCompatActivity {
                     JSONObject movieDataObject = new JSONObject(jsonResponse);
                     // Getting JSON Array node
                     JSONArray reviewArray = movieDataObject.getJSONArray("results");
-                    Log.d(TAG, "This is the Review JsonArray: " + reviewArray);
                     ReviewActivity.this.newReviews = Review.fromJson(reviewArray);
                 } catch (JSONException e) {
                     e.printStackTrace();

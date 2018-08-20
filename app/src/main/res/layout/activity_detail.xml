@@ -1,81 +1,75 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<ScrollView android:layout_height="match_parent"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    xmlns:android="http://schemas.android.com/apk/res/android">
+    android:layout_height="match_parent">
 
     <RelativeLayout
-    android:orientation="vertical"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
 
         <ImageView
+            android:id="@+id/iv_detail_movie_poster"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/iv_detail_movie_poster"
             android:layout_alignParentTop="true"
-            android:padding="10dp"
             android:contentDescription="@string/movie_poster"
-            />
+            android:padding="10dp" />
 
         <TextView
+            android:id="@+id/tv_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/tv_title"
             android:layout_toEndOf="@id/iv_detail_movie_poster"
             android:padding="10dp"
-            android:textSize="20sp"
-            />
+            android:textSize="20sp" />
 
         <TextView
+            android:id="@+id/tv_release_date"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/tv_release_date"
             android:layout_below="@id/tv_title"
             android:layout_toEndOf="@id/iv_detail_movie_poster"
             android:padding="10dp"
-            android:textSize="16sp"
-            />
+            android:textSize="16sp" />
 
         <TextView
+            android:id="@+id/tv_rating"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/tv_rating"
             android:layout_below="@id/tv_release_date"
             android:layout_toEndOf="@id/iv_detail_movie_poster"
             android:padding="10dp"
-            android:textSize="16sp"
-            />
+            android:textSize="16sp" />
 
         <CheckBox
+            android:id="@+id/save_button"
+            style="?android:attr/starStyle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/save_button"
             android:layout_below="@id/tv_rating"
-            android:layout_toEndOf="@id/btn_reviews"
             android:layout_marginStart="10dp"
-            android:padding="10dp"
-            style="?android:attr/starStyle"
+            android:layout_toEndOf="@id/btn_reviews"
             android:onClick="toggleFavorite"
-            />
+            android:padding="10dp" />
 
         <Button
             android:id="@+id/btn_reviews"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_toEndOf="@id/iv_detail_movie_poster"
             android:layout_below="@id/tv_rating"
-            android:text="@string/reviews"/>
+            android:layout_toEndOf="@id/iv_detail_movie_poster"
+            android:text="@string/reviews" />
 
 
         <TextView
+            android:id="@+id/tv_description"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/tv_description"
             android:layout_below="@id/iv_detail_movie_poster"
             android:padding="10dp"
-            android:textSize="14sp"
-            />
+            android:textSize="14sp" />
 
         <TextView
             android:id="@+id/tv_error_message_display"
@@ -90,27 +84,26 @@
             android:id="@+id/movie_trailerlist_title"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/movie_trailers_title"
-            android:textSize="22sp"
-            android:textStyle="bold"
             android:layout_below="@id/tv_description"
-            android:paddingStart="10dp"
+            android:layout_marginTop="20dp"
             android:paddingEnd="10dp"
             android:paddingLeft="10dp"
             android:paddingRight="10dp"
-            android:layout_marginTop="20dp"
-            />
+            android:paddingStart="10dp"
+            android:text="@string/movie_trailers_title"
+            android:textSize="22sp"
+            android:textStyle="bold" />
 
         <ListView
             android:id="@+id/listview_trailer"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@id/movie_trailerlist_title"
-            android:paddingStart="10dp"
+            android:layout_marginTop="10dp"
             android:paddingEnd="10dp"
             android:paddingLeft="10dp"
             android:paddingRight="10dp"
-            android:layout_marginTop="10dp"/>
+            android:paddingStart="10dp" />
 
     </RelativeLayout>
 

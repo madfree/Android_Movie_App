@@ -11,7 +11,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -30,8 +29,6 @@ import java.util.HashMap;
 
 public class MainActivity extends AppCompatActivity
         implements LoaderManager.LoaderCallbacks<ArrayList<HashMap<String, String>>> {
-
-    private final String TAG = MainActivity.class.getName();
 
     private RecyclerView mRecyclerView;
     private MovieAdapter mMovieAdapter;
@@ -60,7 +57,8 @@ public class MainActivity extends AppCompatActivity
         mRecyclerView.setAdapter(mMovieAdapter);
         mLoadingIndicator = findViewById(R.id.pb_loading_indicator);
         sharedPref = getSharedPreferences(PREF_MOVIE_LIST, MODE_PRIVATE);
-        LoaderManager.LoaderCallbacks<ArrayList<HashMap<String, String>>> callback = MainActivity.this;
+        LoaderManager.LoaderCallbacks<ArrayList<HashMap<String, String>>> callback = MainActivity
+                .this;
         getSupportLoaderManager().initLoader(MOVIE_LOADER_ID, null, callback);
     }
 
@@ -84,7 +82,8 @@ public class MainActivity extends AppCompatActivity
 
     @NonNull
     @Override
-    public Loader<ArrayList<HashMap<String, String>>> onCreateLoader(int loaderId, @Nullable Bundle args) {
+    public Loader<ArrayList<HashMap<String, String>>> onCreateLoader(int loaderId, @Nullable
+            Bundle args) {
 
         return new AsyncTaskLoader<ArrayList<HashMap<String, String>>>(this) {
 
@@ -105,11 +104,9 @@ public class MainActivity extends AppCompatActivity
             public ArrayList<HashMap<String, String>> loadInBackground() {
 
                 String prefMovieList = sharedPref.getString(PREF_MOVIE_LIST, KEY_POPULAR);
-                Log.v(TAG, "Result from sharedPreferences: " + prefMovieList);
 
                 ArrayList<HashMap<String, String>> parsedMovieData = new ArrayList<>();
                 if (prefMovieList.equals(KEY_FAVORITE)) {
-                    Log.v(TAG, "Loading favorites");
 
                     Cursor cursor = getContentResolver().query(MovieContract.MovieEntry.CONTENT_URI,
                             null,
@@ -119,12 +116,18 @@ public class MainActivity extends AppCompatActivity
 
                     if ((cursor != null) && (cursor.getCount() > 0)) {
                         for (cursor.moveToFirst(); !cursor.isAfterLast(); cursor.moveToNext()) {
-                            String movieId = cursor.getString(cursor.getColumnIndex(MovieContract.MovieEntry.COLUMN_MOVIE_ID));
-                            String originalTitle = cursor.getString(cursor.getColumnIndex(MovieContract.MovieEntry.COLUMN_MOVIE_NAME));
-                            String releaseDate = cursor.getString(cursor.getColumnIndex(MovieContract.MovieEntry.COLUMN_RELEASE_DATE));
-                            String userRating = cursor.getString(cursor.getColumnIndex(MovieContract.MovieEntry.COLUMN_RATING));
-                            String description = cursor.getString(cursor.getColumnIndex(MovieContract.MovieEntry.COLUMN_DESCRIPTION));
-                            String moviePosterUrl = cursor.getString(cursor.getColumnIndex(MovieContract.MovieEntry.COLUMN_MOVIE_POSTER_URL));
+                            String movieId = cursor.getString(cursor.getColumnIndex(MovieContract
+                                    .MovieEntry.COLUMN_MOVIE_ID));
+                            String originalTitle = cursor.getString(cursor.getColumnIndex
+                                    (MovieContract.MovieEntry.COLUMN_MOVIE_NAME));
+                            String releaseDate = cursor.getString(cursor.getColumnIndex
+                                    (MovieContract.MovieEntry.COLUMN_RELEASE_DATE));
+                            String userRating = cursor.getString(cursor.getColumnIndex
+                                    (MovieContract.MovieEntry.COLUMN_RATING));
+                            String description = cursor.getString(cursor.getColumnIndex
+                                    (MovieContract.MovieEntry.COLUMN_DESCRIPTION));
+                            String moviePosterUrl = cursor.getString(cursor.getColumnIndex
+                                    (MovieContract.MovieEntry.COLUMN_MOVIE_POSTER_URL));
 
                             HashMap<String, String> movieDetail = new HashMap<>();
                             movieDetail.put("id", movieId);
@@ -143,7 +146,6 @@ public class MainActivity extends AppCompatActivity
                     try {
                         URL movieDbUrl = NetworkUtils.buildMovieUrl(prefMovieList);
                         String jsonResponse = NetworkUtils.getResponseFromHttpUrl(movieDbUrl);
-                        //Log.e(TAG, "Response from url" + jsonResponse);
                         parsedMovieData = NetworkUtils.parseJsonData(jsonResponse);
                     } catch (IOException e) {
                         e.printStackTrace();

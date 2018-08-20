@@ -38,7 +38,8 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieListAda
     // creates and inflates the adapter when called
     @NonNull
     @Override
-    public MovieListAdapterViewHolder onCreateViewHolder (@NonNull ViewGroup viewGroup, int viewType) {
+    public MovieListAdapterViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int
+            viewType) {
         Context context = viewGroup.getContext();
         int layoutIdForListItem = R.layout.movies_list_item;
         LayoutInflater inflater = LayoutInflater.from(context);
@@ -49,7 +50,8 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieListAda
 
     // binds the data for the movies to the grid via the adapter
     @Override
-    public void onBindViewHolder(@NonNull final MovieListAdapterViewHolder holder, final int position) {
+    public void onBindViewHolder(@NonNull final MovieListAdapterViewHolder holder, final int
+            position) {
 
         final String urlForThisItem = mMovieData.get(position).get("moviePosterUrl");
 
@@ -70,14 +72,13 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieListAda
                 intent.putExtra("moviePosterUrl", urlForThisItem);
 
                 view.getContext().startActivity(intent);
-                //Log.v(TAG, "This is the intent sent:" + intent);
             }
         });
     }
 
     // counts the number of items of the movie data list
     @Override
-    public int getItemCount () {
+    public int getItemCount() {
         if (null == mMovieData) return 0;
         return mMovieData.size();
     }

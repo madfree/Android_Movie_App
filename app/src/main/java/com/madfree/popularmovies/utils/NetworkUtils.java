@@ -44,7 +44,6 @@ public class NetworkUtils {
         } catch (MalformedURLException e) {
             e.printStackTrace();
         }
-        //Log.d(TAG, "buildUrl: " + url);
         return url;
     }
 
@@ -61,7 +60,6 @@ public class NetworkUtils {
         } catch (MalformedURLException e) {
             e.printStackTrace();
         }
-        //Log.d(TAG, "buildUrl: " + url);
         return url;
     }
 
@@ -78,7 +76,6 @@ public class NetworkUtils {
         } catch (MalformedURLException e) {
             e.printStackTrace();
         }
-        //Log.d(TAG, "buildUrl: " + url);
         return url;
     }
 
@@ -88,16 +85,12 @@ public class NetworkUtils {
         builtString.append(IMAGE_BASE_URL)
                 .append(IMAGE_SIZE)
                 .append(movieId);
-
-        //Log.d(TAG, "buildUrl: " + builtString);
         return builtString.toString();
     }
 
     public static String youtubeUrlString(String trailerKey) {
         StringBuilder builtString = new StringBuilder();
         builtString.append(YOUTUBE_BASE_URL).append("?v=").append(trailerKey);
-
-        //Log.d(TAG, "buildUrl: " + builtString);
         return builtString.toString();
     }
 
@@ -123,7 +116,7 @@ public class NetworkUtils {
     }
 
     // parse the JSON movie data received into an ArrayList<Hashmap>
-    public static ArrayList<HashMap<String,String>> parseJsonData(String jsonResponse) {
+    public static ArrayList<HashMap<String, String>> parseJsonData(String jsonResponse) {
         ArrayList<HashMap<String, String>> parsedMovieData = new ArrayList<>();
 
         if (jsonResponse != null) {
@@ -151,7 +144,6 @@ public class NetworkUtils {
                     movieDetail.put("description", description);
                     movieDetail.put("moviePosterUrl", moviePosterUrl);
                     parsedMovieData.add(movieDetail);
-                    //Log.v(TAG, "This is the movieDetail: " + movieDetail);
                 }
             } catch (final JSONException e) {
                 e.printStackTrace();

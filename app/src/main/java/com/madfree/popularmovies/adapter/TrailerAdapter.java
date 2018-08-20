@@ -26,7 +26,8 @@ public class TrailerAdapter extends ArrayAdapter {
 
         // Check if an existing view is being reused, otherwise inflate the view
         if (convertView == null) {
-            convertView = LayoutInflater.from(getContext()).inflate(R.layout.trailer_list_item, parent, false);
+            convertView = LayoutInflater.from(getContext()).inflate(R.layout.trailer_list_item,
+                    parent, false);
         }
 
         // Lookup view for data population
