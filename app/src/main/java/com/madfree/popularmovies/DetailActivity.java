@@ -259,6 +259,8 @@ public class DetailActivity extends AppCompatActivity implements LoaderManager
         outState.putString("moviePosterUrl", posterUrl);
     }
 
+    // Will set the height of the ListView according to the number of items in the list
+    // Solution derived from: https://stackoverflow.com/questions/29579811/changing-number-of-columns-with-gridlayoutmanager-and-recyclerview
     private void setListViewHeight(ListView listView) {
         ListAdapter listAdapter = listView.getAdapter();
         if (listAdapter != null) {
@@ -339,6 +341,8 @@ public class DetailActivity extends AppCompatActivity implements LoaderManager
         }
     }
 
+    // Creating the share button in the action bar
+    // Solution derived from https://developer.android.com/training/sharing/shareaction
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate menu resource file.
