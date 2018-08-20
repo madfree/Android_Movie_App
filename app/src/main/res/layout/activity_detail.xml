@@ -2,13 +2,12 @@
 
 <ScrollView android:layout_height="match_parent"
     android:layout_width="match_parent"
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:style="http://schemas.android.com/apk/res-auto">
+    xmlns:android="http://schemas.android.com/apk/res/android">
 
     <RelativeLayout
     android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="wrap_content">
 
         <ImageView
             android:layout_width="wrap_content"
@@ -53,17 +52,20 @@
             android:layout_height="wrap_content"
             android:id="@+id/save_button"
             android:layout_below="@id/tv_rating"
-            android:layout_toEndOf="@id/iv_detail_movie_poster"
-            android:layout_marginLeft="10dp"
+            android:layout_toEndOf="@id/btn_reviews"
             android:layout_marginStart="10dp"
             android:padding="10dp"
-            android:textSize="10sp"
-            android:text="@string/favorite"
-            android:background="@color/colorPrimaryDark"
-            android:textColor="@android:color/white"
             style="?android:attr/starStyle"
-            android:onClick="onClickAddFav"
+            android:onClick="toggleFavorite"
             />
+
+        <Button
+            android:id="@+id/btn_reviews"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toEndOf="@id/iv_detail_movie_poster"
+            android:layout_below="@id/tv_rating"
+            android:text="@string/reviews"/>
 
 
         <TextView
@@ -83,6 +85,32 @@
             android:text="@string/error_message"
             android:textSize="20sp"
             android:visibility="invisible" />
+
+        <TextView
+            android:id="@+id/movie_trailerlist_title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/movie_trailers_title"
+            android:textSize="22sp"
+            android:textStyle="bold"
+            android:layout_below="@id/tv_description"
+            android:paddingStart="10dp"
+            android:paddingEnd="10dp"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"
+            android:layout_marginTop="20dp"
+            />
+
+        <ListView
+            android:id="@+id/listview_trailer"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/movie_trailerlist_title"
+            android:paddingStart="10dp"
+            android:paddingEnd="10dp"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"
+            android:layout_marginTop="10dp"/>
 
     </RelativeLayout>
 

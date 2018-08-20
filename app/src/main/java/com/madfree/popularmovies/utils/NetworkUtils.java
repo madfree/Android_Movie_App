@@ -1,4 +1,4 @@
-package com.madfree.popularmovies.helper;
+package com.madfree.popularmovies.utils;
 
 import android.net.Uri;
 import android.util.Log;
@@ -25,17 +25,53 @@ public class NetworkUtils {
 
     private final static String MOVIEDB_BASE_URL = "https://api.themoviedb.org/3/";
     private final static String CATEGORY = "movie";
+    private final static String SUBCATEGORY_TRAILER = "videos";
+    private final static String SUBCATEGORY_REVIEW = "reviews";
     private final static String IMAGE_BASE_URL = "https://image.tmdb.org/t/p/";
     private final static String IMAGE_SIZE = "w500";
+    private static final Uri YOUTUBE_BASE_URL = Uri.parse("https://www.youtube.com/watch");
 
     // Built the URL for the API call
-    public static URL buildUrl(String movieDbUrlString) {
+    public static URL buildMovieUrl(String movieDbUrlString) {
         Uri builtUri = Uri.parse(MOVIEDB_BASE_URL).buildUpon()
                 .appendPath(CATEGORY)
                 .appendPath(movieDbUrlString)
                 .appendQueryParameter("api_key", apiKey)
                 .build();
+        URL url = null;
+        try {
+            url = new URL(builtUri.toString());
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+        }
+        //Log.d(TAG, "buildUrl: " + url);
+        return url;
+    }
 
+    public static URL buildTrailerUrl(String movieId) {
+        Uri builtUri = Uri.parse(MOVIEDB_BASE_URL).buildUpon()
+                .appendPath(CATEGORY)
+                .appendPath(movieId)
+                .appendPath(SUBCATEGORY_TRAILER)
+                .appendQueryParameter("api_key", apiKey)
+                .build();
+        URL url = null;
+        try {
+            url = new URL(builtUri.toString());
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+        }
+        //Log.d(TAG, "buildUrl: " + url);
+        return url;
+    }
+
+    public static URL buildReviewUrl(String movieId) {
+        Uri builtUri = Uri.parse(MOVIEDB_BASE_URL).buildUpon()
+                .appendPath(CATEGORY)
+                .appendPath(movieId)
+                .appendPath(SUBCATEGORY_REVIEW)
+                .appendQueryParameter("api_key", apiKey)
+                .build();
         URL url = null;
         try {
             url = new URL(builtUri.toString());
@@ -52,6 +88,14 @@ public class NetworkUtils {
         builtString.append(IMAGE_BASE_URL)
                 .append(IMAGE_SIZE)
                 .append(movieId);
+
+        //Log.d(TAG, "buildUrl: " + builtString);
+        return builtString.toString();
+    }
+
+    public static String youtubeUrlString(String trailerKey) {
+        StringBuilder builtString = new StringBuilder();
+        builtString.append(YOUTUBE_BASE_URL).append("?v=").append(trailerKey);
 
         //Log.d(TAG, "buildUrl: " + builtString);
         return builtString.toString();

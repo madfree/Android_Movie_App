@@ -17,12 +17,12 @@ public class MovieProvider extends ContentProvider {
 
     private final String TAG = MovieProvider.class.getName();
 
-    public static final int CODE_FAV_MOVIES = 100;
-    public static final int CODE_FAV_MOVIE_WITH_ID = 101;
+    private static final int CODE_FAV_MOVIES = 100;
+    private static final int CODE_FAV_MOVIE_WITH_ID = 101;
 
     private static final UriMatcher sUriMatcher = buildMatcher();
 
-    public static UriMatcher buildMatcher() {
+    private static UriMatcher buildMatcher() {
 
         final UriMatcher matcher = new UriMatcher(UriMatcher.NO_MATCH);
 

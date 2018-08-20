@@ -1,8 +1,7 @@
-package com.madfree.popularmovies;
+package com.madfree.popularmovies.adapter;
 
 import android.content.Context;
 import android.content.Intent;
-import android.database.Cursor;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -10,7 +9,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 
-import com.madfree.popularmovies.helper.NetworkUtils;
+import com.madfree.popularmovies.DetailActivity;
+import com.madfree.popularmovies.R;
+import com.madfree.popularmovies.utils.NetworkUtils;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
@@ -18,9 +19,7 @@ import java.util.HashMap;
 
 public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieListAdapterViewHolder> {
 
-    private final String TAG = MainActivity.class.getName();
     private ArrayList<HashMap<String, String>> mMovieData;
-    private Cursor mCursor;
 
     public MovieAdapter() {
     }
@@ -68,7 +67,7 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieListAda
                 intent.putExtra("releaseDate", mMovieData.get(position).get("releaseDate"));
                 intent.putExtra("userRating", mMovieData.get(position).get("userRating"));
                 intent.putExtra("description", mMovieData.get(position).get("description"));
-                intent.putExtra("moviePosterUrl", urlForThisItem);;
+                intent.putExtra("moviePosterUrl", urlForThisItem);
 
                 view.getContext().startActivity(intent);
                 //Log.v(TAG, "This is the intent sent:" + intent);

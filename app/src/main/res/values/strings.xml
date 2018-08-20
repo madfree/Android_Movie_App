@@ -2,7 +2,7 @@
     <string name="app_name">Popular Movies</string>
     <string name="content_authority">com.madfree.popularmovies</string>
 
-    <string name="error_message">An error has occurred. Please try again!</string>
+    <string name="error_message">The list is empty!</string>
     <string name="popular">Most Popular Movies</string>
     <string name="best_rated">Best Rated Movies</string>
     <string name="favorite_movies">Favorite Movies</string>
@@ -12,4 +12,10 @@
     <string name="favorite">Mark as favorite</string>
     <string name="markFavorite">Marked as favorite</string>
     <string name="unmarkFavorite">Mark as favorite</string>
+    <string name="reviews">Reviews</string>
+    <string name="no_trailers_to_display">No trailers to display!</string>
+    <string name="reviews_title">Reviews</string>
+    <string name="movie_trailers_title">Movie trailers</string>
+    <string name="share_button">Share</string>
+    <string name="play_button">play button</string>
 </resources>
