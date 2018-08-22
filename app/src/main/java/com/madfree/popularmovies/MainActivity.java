@@ -2,6 +2,7 @@ package com.madfree.popularmovies;
 
 import android.content.SharedPreferences;
 import android.database.Cursor;
+import android.os.Parcelable;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.LoaderManager;
@@ -43,6 +44,8 @@ public class MainActivity extends AppCompatActivity
     private SharedPreferences sharedPref;
 
     private static final int MOVIE_LOADER_ID = 0;
+    private static final String BUNDLE_RECYCLER_LAYOUT = "recyler_layout";
+    private Parcelable savedRecyclerLayoutState;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,12 +53,12 @@ public class MainActivity extends AppCompatActivity
         setContentView(R.layout.activity_main);
         mRecyclerView = findViewById(R.id.rv_movies);
         mErrorMessageDisplay = findViewById(R.id.tv_error_message_display);
+        mLoadingIndicator = findViewById(R.id.pb_loading_indicator);
         final int numColumns = getResources().getInteger(R.integer.gallery_columns);
-        GridLayoutManager gridLayoutManager = new GridLayoutManager(this, numColumns);
-        mRecyclerView.setLayoutManager(gridLayoutManager);
+        GridLayoutManager mGridLayoutManager = new GridLayoutManager(this, numColumns);
+        mRecyclerView.setLayoutManager(mGridLayoutManager);
         mMovieAdapter = new MovieAdapter();
         mRecyclerView.setAdapter(mMovieAdapter);
-        mLoadingIndicator = findViewById(R.id.pb_loading_indicator);
         sharedPref = getSharedPreferences(PREF_MOVIE_LIST, MODE_PRIVATE);
         LoaderManager.LoaderCallbacks<ArrayList<HashMap<String, String>>> callback = MainActivity
                 .this;
@@ -171,6 +174,9 @@ public class MainActivity extends AppCompatActivity
         } else {
             showMovieDataView();
             mMovieAdapter.setMovieData(data);
+            if (savedRecyclerLayoutState != null) {
+                mRecyclerView.getLayoutManager().onRestoreInstanceState(savedRecyclerLayoutState);
+            }
         }
     }
 
@@ -217,4 +223,22 @@ public class MainActivity extends AppCompatActivity
         return super.onOptionsItemSelected(item);
     }
 
+    // Solution dereived from here:
+    // https://stackoverflow.com/questions/27816217/how-to-save-recyclerviews-scroll-position
+    // -using-recyclerview-state
+    // also: https://stackoverflow.com/questions/14462456/returning-from-an-activity-using
+    // -navigateupfromsametask/16147110#16147110
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putParcelable(BUNDLE_RECYCLER_LAYOUT, mRecyclerView.getLayoutManager()
+                .onSaveInstanceState());
+    }
+
+    @Override
+    protected void onRestoreInstanceState(Bundle savedInstanceState) {
+        if (savedInstanceState != null) {
+            savedRecyclerLayoutState = savedInstanceState.getParcelable(BUNDLE_RECYCLER_LAYOUT);
+        }
+    }
 }
