@@ -148,6 +148,7 @@ public class DetailActivity extends AppCompatActivity implements LoaderManager
                 .load(NetworkUtils.buildThumbString(posterUrl))
                 .resize(400, 550)
                 .centerCrop()
+                .error(R.mipmap.ic_launcher)
                 .into(mMoviePoster);
     }
 

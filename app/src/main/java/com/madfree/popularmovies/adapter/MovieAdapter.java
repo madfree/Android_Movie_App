@@ -58,6 +58,7 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieListAda
         Picasso.get()
                 .load(NetworkUtils.buildThumbString(urlForThisItem))
                 .fit()
+                .error(R.mipmap.ic_launcher)
                 .into(holder.mMoviePoster);
 
         holder.mMoviePoster.setOnClickListener(new View.OnClickListener() {

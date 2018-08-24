@@ -54,21 +54,17 @@ public class MainActivity extends AppCompatActivity
         mRecyclerView = findViewById(R.id.rv_movies);
         mErrorMessageDisplay = findViewById(R.id.tv_error_message_display);
         mLoadingIndicator = findViewById(R.id.pb_loading_indicator);
+        sharedPref = getSharedPreferences(PREF_MOVIE_LIST, MODE_PRIVATE);
         final int numColumns = getResources().getInteger(R.integer.gallery_columns);
         GridLayoutManager mGridLayoutManager = new GridLayoutManager(this, numColumns);
         mRecyclerView.setLayoutManager(mGridLayoutManager);
         mMovieAdapter = new MovieAdapter();
         mRecyclerView.setAdapter(mMovieAdapter);
-        sharedPref = getSharedPreferences(PREF_MOVIE_LIST, MODE_PRIVATE);
-        LoaderManager.LoaderCallbacks<ArrayList<HashMap<String, String>>> callback = MainActivity
-                .this;
-        getSupportLoaderManager().initLoader(MOVIE_LOADER_ID, null, callback);
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        getSupportLoaderManager().restartLoader(MOVIE_LOADER_ID, null, this);
+        getSupportLoaderManager().initLoader(MOVIE_LOADER_ID, null, this);
+        if (savedInstanceState != null) {
+            savedRecyclerLayoutState = savedInstanceState.getParcelable(BUNDLE_RECYCLER_LAYOUT);
+            mRecyclerView.getLayoutManager().onRestoreInstanceState(savedRecyclerLayoutState);
+        }
     }
 
     // shows the movie data
@@ -174,9 +170,6 @@ public class MainActivity extends AppCompatActivity
         } else {
             showMovieDataView();
             mMovieAdapter.setMovieData(data);
-            if (savedRecyclerLayoutState != null) {
-                mRecyclerView.getLayoutManager().onRestoreInstanceState(savedRecyclerLayoutState);
-            }
         }
     }
 
@@ -206,39 +199,27 @@ public class MainActivity extends AppCompatActivity
             invalidateData();
             editor.putString(PREF_MOVIE_LIST, KEY_POPULAR);
             editor.apply();
-            getSupportLoaderManager().restartLoader(id, null, this);
+            getSupportLoaderManager().restartLoader(MOVIE_LOADER_ID, null, this);
         }
         if (id == R.id.best_rated_movies) {
             invalidateData();
             editor.putString(PREF_MOVIE_LIST, KEY_RATING);
             editor.apply();
-            getSupportLoaderManager().restartLoader(id, null, this);
+            getSupportLoaderManager().restartLoader(MOVIE_LOADER_ID, null, this);
         }
         if (id == R.id.favorite_movies) {
             invalidateData();
             editor.putString(PREF_MOVIE_LIST, KEY_FAVORITE);
             editor.apply();
-            getSupportLoaderManager().restartLoader(id, null, this);
+            getSupportLoaderManager().restartLoader(MOVIE_LOADER_ID, null, this);
         }
         return super.onOptionsItemSelected(item);
     }
 
-    // Solution dereived from here:
-    // https://stackoverflow.com/questions/27816217/how-to-save-recyclerviews-scroll-position
-    // -using-recyclerview-state
-    // also: https://stackoverflow.com/questions/14462456/returning-from-an-activity-using
-    // -navigateupfromsametask/16147110#16147110
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putParcelable(BUNDLE_RECYCLER_LAYOUT, mRecyclerView.getLayoutManager()
                 .onSaveInstanceState());
-    }
-
-    @Override
-    protected void onRestoreInstanceState(Bundle savedInstanceState) {
-        if (savedInstanceState != null) {
-            savedRecyclerLayoutState = savedInstanceState.getParcelable(BUNDLE_RECYCLER_LAYOUT);
-        }
     }
 }
