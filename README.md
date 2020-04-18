@@ -1,4 +1,4 @@
-# Android_Movie_App
+# MyMovieApp
 
 With this Android Movide App you can find the most popular or best rated movies according to [The
  Movie Database (TMDb)](/https://www.themoviedb.org/). You can read though the important detail
